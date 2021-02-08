@@ -309,7 +309,7 @@ select {
 }
 
 .swiper-slide {
-  width: 100%;
+  /* width: 100%; */
   /* height: 90% !important; */
   display: flex;
   flex-direction: column;
@@ -318,16 +318,15 @@ select {
 
 .swiper-slide-next,
 .swiper-slide-prev {
-  opacity: 0.1;
+  opacity: 0.2;
   transition: all 2s ease-in-out;
-  transition-delay: 4s;
-  will-change: opacity;
+  /* transition-delay: 4s; */
 }
 
 .swiper-slide-active {
   opacity: 1;
   transition: all 2s ease-in-out;
-  transition-delay: 4s;
+  /* transition-delay: 4s; */
 }
 
 .swiper-container-horizontal > .swiper-scrollbar {

@@ -4,21 +4,33 @@ import { useSelector, useDispatch } from "react-redux";
 import MainLogo from "../MainLogo";
 // import Zoom from "react-reveal/Zoom";
 import ChoiceTitle from "../ChoiceTitle";
+import ReactNotification from "react-notifications-component";
+import { store } from "react-notifications-component";
 import useSessionStorage from "../../hooks/useSessionStorage";
 import MainSlider from "../MainSlider";
 import Notification from "../Notification";
 import DownloadContainer from "../DownloadContainer";
 import types from "../../redux/types";
+import getIndex from "../../helpers/getIndex";
+import "react-notifications-component/dist/theme.css";
 
 export default function Dashboard({ match, location }) {
   const dispatch = useDispatch();
   const leagues = useSelector((state) => state?.leagues?.data?.leagues);
   const teams = useSelector((state) => state?.teams?.data?.teams);
-  const games = useSelector((state) => state?.games?.data?.game_alert);
   const currentGame = useSelector((state) => state?.games?.current);
+  const games = useSelector((state) => state?.games?.data?.game_alert);
   const loading = useSelector((state) => state?.games?.loading);
+  const errorMessages = useSelector((state) => state?.games?.error);
 
-  console.log("currentGame", currentGame);
+  console.log("errorMessages", errorMessages);
+
+  // console.log("leagues", leagues);
+  // console.log("teams", teams);
+  // console.log("currentGame", currentGame);
+  // console.log("games", games);
+
+  // console.log("currentGame - DASHBOARD", currentGame);
 
   // const gameId = useParams();
   // const history = useHistory();
@@ -51,8 +63,6 @@ export default function Dashboard({ match, location }) {
 
   const [currentGameIndex, setCurrentGameIndex] = useState(currentGame);
 
-  const [message, setMessage] = useState(null);
-
   // refresh page function and get info from sessionStorage -- NOT WORKING NOW!!!!
   // useEffect(() => {
   //   const storedData = JSON.parse(sessionStorage.getItem("game-data"));
@@ -77,12 +87,12 @@ export default function Dashboard({ match, location }) {
   // }, []);
 
   // set info to session storage
-  useEffect(() => {
-    sessionStorage.setItem("game-data", JSON.stringify(allTeams));
-    sessionStorage.setItem("teams-list-data", JSON.stringify(teamsList));
-    sessionStorage.setItem("team-name", team);
-    sessionStorage.setItem("current-game-id", currentGameIndex);
-  }, [allTeams, team, currentGameIndex, teamsList]);
+  // useEffect(() => {
+  //   sessionStorage.setItem("game-data", JSON.stringify(allTeams));
+  //   sessionStorage.setItem("teams-list-data", JSON.stringify(teamsList));
+  //   sessionStorage.setItem("team-name", team);
+  //   sessionStorage.setItem("current-game-id", currentGameIndex);
+  // }, [allTeams, team, currentGameIndex, teamsList]);
 
   // change background function
   function loadImage(imgName) {
@@ -103,30 +113,6 @@ export default function Dashboard({ match, location }) {
     }
   }, [league]);
 
-  function handleTeamsChange(e) {
-    const selectedTeam = teams?.find((team) => team.team_id === e.target.value);
-
-    //API fetch games info
-    dispatch({
-      type: types.GET_GAMES_START,
-      payload: selectedTeam.team_id,
-    });
-    dispatch({
-      type: types.GET_CURRENT_GAME,
-    });
-
-    setIsloading(loading);
-    setAllTeams(games);
-    setCurrentGameIndex(currentGame);
-
-    setTeam(selectedTeam.team_name);
-    console.log("selectedTeam.team_name", selectedTeam.team_name);
-    console.log("CurrentGameIndex", currentGameIndex);
-    setSavedTeam(selectedTeam.team_id);
-    setDefaultTeamValue(selectedTeam.team_id);
-    // history.replace(`/${e.target.value}/games/${currentGameIndex}`);
-  }
-
   function handleLeagueChange(e) {
     //API fetch for teams list
     if (e.target.value === "28") {
@@ -143,7 +129,45 @@ export default function Dashboard({ match, location }) {
     teamRef.current.value = "select";
   }
 
-  let isChoiceMade = !!team && !!league;
+  function handleTeamsChange(e) {
+    const selectedTeam = teams?.find((team) => team.team_id === e.target.value);
+
+    //API fetch games info
+    setIsloading(loading);
+    dispatch({
+      type: types.GET_GAMES_START,
+      payload: selectedTeam.team_id,
+    });
+
+    setAllTeams(games);
+    setCurrentGameIndex(getIndex(allTeams));
+
+    setTeam(selectedTeam.team_name);
+    // console.log("selectedTeam.team_name", selectedTeam.team_name);
+    // console.log("CurrentGameIndex - DASHBOARD", currentGameIndex);
+    setSavedTeam(selectedTeam.team_id);
+    setDefaultTeamValue(selectedTeam.team_id);
+    // history.replace(`/${e.target.value}/games/${currentGameIndex}`);
+  }
+
+  // let isChoiceMade = !!leagues && !!games;
+  let isChoiceMade = !!currentGame;
+
+  if (errorMessages) {
+    store.addNotification({
+      title: "Server Error",
+      message: errorMessages,
+      type: "danger",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 4000,
+        onScreen: true,
+      },
+    });
+  }
 
   return (
     <>
@@ -206,14 +230,15 @@ export default function Dashboard({ match, location }) {
             </div>
           </div>
 
-          {message && <Notification message={message} />}
+          <ReactNotification />
+          {/* {errorMessages && <Notification message={errorMessages} />} */}
 
           {isChoiceMade ? (
             <MainSlider
               team={team}
-              slides={allTeams}
-              currentGameIndex={currentGameIndex}
-              isLoading={isLoading}
+              slides={games}
+              currentGameIndex={currentGame}
+              isLoading={loading}
             />
           ) : (
             <ChoiceTitle />

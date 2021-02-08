@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Navigation, Scrollbar } from "swiper";
 import Loader from "react-loader-spinner";
@@ -30,10 +31,24 @@ export default function MainSlider({
   const history = useHistory();
 
   // const currentGame = useSelector((state) => state?.games?.current);
-  // console.log("currentGame", currentGame);
+  // const games = useSelector((state) => state?.games?.data?.game_alert);
+
+  const [allGames, setAllGames] = useState(slides);
+  const [currGame, setCurrGame] = useState(currentGameIndex);
+
+  useEffect(() => {
+    setAllGames(slides);
+    setCurrGame(currentGameIndex);
+  }, [slides, currentGameIndex]);
+
+  console.log("allGames", allGames);
+  console.log("currGame", currGame);
+
+  // console.log("games - SLIDER", games);
+  // console.log("current GAME - SLIDER", currentGame);
 
   //number of all slides
-  const allSlides = slides?.length;
+  const allSlides = allGames?.length;
 
   const [progress, setProgress] = useState(currentGameIndex);
   const currentURL = useLocation();
@@ -121,10 +136,6 @@ export default function MainSlider({
             <TwitterShare url={currentURL.pathname} />
           </div>
 
-          {/* <div className="navigation-wrapper">
-          <HomeButton />
-        </div> */}
-
           <Swiper
             id="main-slider"
             tag="section"
@@ -136,9 +147,9 @@ export default function MainSlider({
             onSlideChange={(swiper) => {
               slideChanged(swiper.activeIndex);
             }}
-            initialSlide={currentGameIndex}
+            initialSlide={currGame}
           >
-            {slides?.map((slide, index) => (
+            {allGames?.map((slide, index) => (
               <SwiperSlide key={slide.event_id} tag="li">
                 <div className="screenshot-container" ref={saveRefs(index)}>
                   <div className="team-wraper">
