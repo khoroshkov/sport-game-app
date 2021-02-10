@@ -8,7 +8,12 @@ const games = (
     case types.GET_GAMES_START:
       return { ...state, loading: true };
     case types.GET_GAMES_SUCCESS:
-      return { loading: false, data: action.payload, current: null };
+      return {
+        loading: false,
+        data: action.payload,
+        current: null,
+        error: null,
+      };
     case types.GET_GAMES_ERROR:
       return {
         loading: false,

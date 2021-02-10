@@ -7,17 +7,28 @@ function* getSchedule({ payload }) {
   try {
     const { status, data } = yield call(api.games.getSchedule, payload);
     if (status < 200 || status >= 300) throw new Error("Something went wrong");
-    const gameIndex = yield call(getIndex, data.game_alert);
-    yield put({ type: types.GET_GAMES_SUCCESS, payload: data });
-    if (gameIndex === -1) {
+    if (data.game_alert.length === 0) {
       yield put({
         type: types.GET_GAMES_ERROR,
         payload:
           "Something went wrong. There's an issue on our end and we can't show this team schedule. Please try again later",
       });
     } else {
+      const gameIndex = yield call(getIndex, data.game_alert);
+      yield put({ type: types.GET_GAMES_SUCCESS, payload: data });
       yield put({ type: types.GET_CURRENT_GAME, payload: gameIndex });
     }
+    // yield put({ type: types.GET_GAMES_SUCCESS, payload: data });
+    // const gameIndex = yield call(getIndex, data.game_alert);
+    // if (gameIndex === -1) {
+    //   yield put({
+    //     type: types.GET_GAMES_ERROR,
+    //     payload:
+    //       "Something went wrong. There's an issue on our end and we can't show this team schedule. Please try again later",
+    //   });
+    // } else {
+    //   yield put({ type: types.GET_CURRENT_GAME, payload: gameIndex });
+    // }
   } catch (error) {
     yield put({ type: types.GET_GAMES_ERROR, payload: error });
     if (error?.response?.status === 401) return;

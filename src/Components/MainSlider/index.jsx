@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
+// import useSessionStorage from "../../hooks/useSessionStorage";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Navigation, Scrollbar } from "swiper";
 import Loader from "react-loader-spinner";
@@ -30,11 +31,19 @@ export default function MainSlider({
 }) {
   const history = useHistory();
 
-  // const currentGame = useSelector((state) => state?.games?.current);
-  // const games = useSelector((state) => state?.games?.data?.game_alert);
+  /** Save all games and current game id to Session storage **/
+  // const [savedCurrentGameId, setSavedCurrentGameId] = useSessionStorage(
+  //   "current-game-id",
+  //   currentGameIndex
+  // );
+  // const [savedAllGames, setSavedAllGames] = useSessionStorage(
+  //   "all-games",
+  //   slides
+  // );
 
   const [allGames, setAllGames] = useState(slides);
   const [currGame, setCurrGame] = useState(currentGameIndex);
+  // setSavedCurrentGameId(currentGameIndex);
 
   useEffect(() => {
     setAllGames(slides);
@@ -43,9 +52,6 @@ export default function MainSlider({
 
   console.log("allGames", allGames);
   console.log("currGame", currGame);
-
-  // console.log("games - SLIDER", games);
-  // console.log("current GAME - SLIDER", currentGame);
 
   //number of all slides
   const allSlides = allGames?.length;
@@ -124,6 +130,7 @@ export default function MainSlider({
           height={200}
           width={200}
           timeout={3000}
+          className="main-page-loader-cont"
         />
       ) : (
         <div className="slider-container">
