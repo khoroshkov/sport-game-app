@@ -1,0 +1,28 @@
+.choiceTitleContainer {
+  /* width: 80%; */
+  padding-top: 3rem;
+}
+
+.choiceTitleContainer p {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 2rem;
+  text-shadow: 2px 1px 4px #e0e0e0;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+@media only screen and (min-width: 768px) {
+  .choiceTitleContainer p {
+    font-size: 3rem;
+    line-height: 3rem;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .choiceTitleContainer p {
+    font-size: 5rem;
+    line-height: 5rem;
+    text-shadow: 2px 2px 8px #e0e0e0;
+  }
+}

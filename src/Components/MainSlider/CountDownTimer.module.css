@@ -1,0 +1,67 @@
+.countdownWrapper {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.countdowItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+  margin-right: 1rem;
+}
+
+.countdownItem span {
+  color: #fff;
+  font-weight: 400;
+}
+
+.countdowItemNumber {
+  font-size: 3rem;
+  line-height: 3.1rem;
+}
+
+.countdowItemDesc {
+  color: #bdbdbd;
+  font-size: 1rem;
+  line-height: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+}
+
+.countdownSvg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100px;
+  height: 100px;
+}
+
+@media only screen and (min-width: 768px) {
+  .countdownWrapper {
+    justify-content: space-evenly;
+  }
+
+  .countdowItemNumber {
+    font-size: 4rem;
+    line-height: 4.2rem;
+  }
+
+  .countdowItemDesc {
+    font-size: 2rem;
+    line-height: 2.1rem;
+  }
+
+  .countdownSvg {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+}

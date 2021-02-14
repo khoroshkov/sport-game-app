@@ -1,0 +1,132 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 90;
+}
+
+.modalMain {
+  position: fixed;
+  background: white;
+  width: 85%;
+  height: auto;
+  top: 50%;
+  left: 50%;
+  padding: 0.5rem;
+  border-radius: 10px;
+  transform: translate(-50%, -50%);
+}
+
+.displayBlock {
+  display: block;
+}
+
+.displayNone {
+  display: none;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalHeader h3 {
+  font-size: 1rem;
+  line-height: 2.1rem;
+  font-weight: 600;
+  color: #828282;
+  text-transform: uppercase;
+}
+
+.modalCloseBtn {
+  height: 70px;
+  width: 70px;
+  background: transparent;
+  border: none;
+  outline: none;
+  position: relative;
+  cursor: pointer;
+
+  transition: all 0.3s ease-in-out;
+}
+
+.modalCloseBtn::after {
+  content: "\d7";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: var(--red);
+  font-size: 40px;
+  line-height: 70px;
+  text-align: center;
+}
+
+.modalCloseBtn:hover {
+  transform: scale(1.3);
+}
+
+.modalSectionTitles {
+  font-size: 1rem;
+  line-height: 1.1rem;
+  color: var(--red);
+}
+
+.modalSectionTitles::after {
+  content: "";
+  display: inline-block;
+  height: 1px;
+  width: 65%;
+  margin-left: 20px;
+  background: var(--red);
+}
+
+.detailsSection {
+  display: flex;
+  justify-content: space-between;
+}
+
+.teamsDetailsCont {
+  width: 49%;
+}
+
+.teamTitles::after {
+  width: 45%;
+}
+
+.pointsInfo p,
+.statsInfo p,
+.opponentTeamInfo p,
+.currentTeamInfo p {
+  color: var(--text-grey);
+  text-align: center;
+}
+
+@media only screen and (min-width: 768px) {
+}
+
+@media only screen and (min-width: 1024px) {
+  .modalMain {
+    width: 50%;
+    padding: 1.6rem 2.3rem;
+    border-radius: 30px;
+  }
+
+  .modalHeader h3 {
+    font-size: 1.6rem;
+  }
+
+  .modalSectionTitles {
+    font-size: 1.6rem;
+    line-height: 2.1rem;
+  }
+
+  .modalSectionTitles::after {
+    width: 80%;
+  }
+}

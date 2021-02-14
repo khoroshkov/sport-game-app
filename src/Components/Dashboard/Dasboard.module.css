@@ -1,0 +1,220 @@
+.container {
+  max-width: 1400px;
+  width: 100%;
+  /* height: 100%; */
+  margin: 0 auto;
+  padding: 0 1rem;
+  padding-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.mainBgImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: none;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1;
+  opacity: 1;
+
+  animation: appearence 1.2s ease-in;
+}
+
+.mainBgImg::after {
+  display: block;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+@keyframes appearence {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.homeContainer {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.selectContainer {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+/*** SELECT ***/
+
+.selectContainer {
+  width: 60%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.selectOptionsTitle {
+  font-size: 1.8rem;
+  line-height: 2.4rem;
+  margin-right: 1rem;
+  color: var(--text-grey);
+  font-weight: 300;
+}
+
+select {
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  padding: 0 1em 0 0;
+  margin: 0;
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: inherit;
+  line-height: inherit;
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+select {
+  outline: none;
+}
+.select {
+  display: flex;
+  align-items: baseline;
+}
+
+.select select {
+  border-bottom: 1px solid var(--red);
+  padding: 0.25em 0.5em;
+  font-size: 1.25rem;
+  cursor: pointer;
+  line-height: 1.5rem;
+  background-color: transparent;
+  background-image: linear-gradient(to top, transparent, transparent 33%);
+  text-align: center;
+}
+
+.leagueSelect,
+.teamSelect {
+  font-size: 1rem;
+  line-height: 2.4rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.leagueSelect {
+  width: 6rem;
+}
+
+.teamSelect {
+  width: 14rem;
+}
+
+.optionsLeagueItem,
+.optionsItem {
+  color: #000;
+  font-size: 1rem;
+  line-height: 1rem;
+}
+
+/*** ADVERTASING BLOCKS ***/
+
+.containerAdv {
+  display: none;
+}
+
+.bottomContainer {
+  flex-direction: column;
+  align-items: center;
+}
+
+.containerAdvBottom {
+  display: none;
+  height: 120px;
+  width: 90%;
+  margin: 0 auto;
+  background-color: burlywood;
+  border: 1px solid black;
+  margin-bottom: 5rem;
+  margin-top: 5rem;
+}
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* MEDIA */
+
+@media only screen and (min-width: 768px) {
+  .container {
+    padding: 0 2rem;
+  }
+
+  .homeContainer {
+    padding-top: 2rem;
+  }
+
+  .selectContainer {
+    flex-direction: row;
+    width: 85%;
+    margin-bottom: 3rem;
+  }
+
+  .mainBgImg img {
+    object-fit: cover;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .container {
+    margin-bottom: 10rem;
+  }
+
+  .homeContainer {
+    width: 860px;
+  }
+
+  .selectContainer {
+    justify-content: space-evenly;
+  }
+
+  .containerAdv {
+    /* display: block; */
+    width: 150px;
+    height: 600px;
+    margin-top: 4rem;
+    background-color: burlywood;
+    border: 1px solid black;
+  }
+
+  .containerAdvBottom {
+    height: 150px;
+    width: 600px;
+  }
+}
+
+@media only screen and (min-width: 1243px) {
+  .selectContainer {
+    width: 100%;
+  }
+}

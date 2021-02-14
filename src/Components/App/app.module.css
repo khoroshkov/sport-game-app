@@ -1,0 +1,32 @@
+.app {
+  overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  animation: appearence 1.2s ease-in;
+}
+
+@keyframes appearence {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* MEDIA */
+
+@media only screen and (min-width: 768px) {
+  .app {
+    padding-bottom: 3rem;
+  }
+}

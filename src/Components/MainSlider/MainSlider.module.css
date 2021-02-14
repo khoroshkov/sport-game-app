@@ -1,0 +1,126 @@
+.sliderContainer {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  text-align: center;
+  /* padding-top: 1rem; */
+}
+
+/* swiper */
+
+.dateContainer {
+  text-align: center;
+  padding: 0 2rem;
+  margin-bottom: 1rem;
+}
+
+.dateContainer span {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.1rem;
+  color: #bdbdbd;
+  letter-spacing: 0.1rem;
+}
+
+.teamWraper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.teamsMainTitle,
+.versus {
+  text-transform: uppercase;
+  line-height: 2rem;
+  text-align: center;
+}
+
+.teamsMainTitle {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.cityName {
+  margin-right: 0.5rem;
+}
+
+.versus {
+  font-size: 2rem;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  line-height: 2rem;
+}
+
+/* info button */
+
+.socialBtnWraper {
+  display: none;
+  display: flex;
+  flex-direction: column;
+
+  position: fixed;
+  top: 6rem;
+  right: 0;
+}
+
+.infoBtn {
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: transform 0.4s ease-in-out;
+  margin-bottom: 1rem;
+}
+
+.infoBtn:hover {
+  transform: scale(1.2);
+}
+
+.infoBtn svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* MEDIA */
+
+@media only screen and (min-width: 768px) {
+  .dateContainer span {
+    font-size: 1.8rem;
+    line-height: 2.4rem;
+    letter-spacing: 0.2rem;
+  }
+
+  .teamsMainTitle,
+  .versus {
+    line-height: 4.6rem;
+  }
+
+  .teamsMainTitle {
+    font-size: 4.6rem;
+    font-weight: 700;
+  }
+
+  .cityName {
+    margin-right: 0.5rem;
+  }
+
+  .versus {
+    font-size: 4rem;
+    line-height: 4rem;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .infoBtn {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 3rem;
+  }
+}

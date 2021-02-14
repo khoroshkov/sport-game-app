@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import api from "../../services/API";
+import api from "../../services/api";
 import types from "../types";
 import getIndex from "../../helpers/getIndex";
 
@@ -18,17 +18,6 @@ function* getSchedule({ payload }) {
       yield put({ type: types.GET_GAMES_SUCCESS, payload: data });
       yield put({ type: types.GET_CURRENT_GAME, payload: gameIndex });
     }
-    // yield put({ type: types.GET_GAMES_SUCCESS, payload: data });
-    // const gameIndex = yield call(getIndex, data.game_alert);
-    // if (gameIndex === -1) {
-    //   yield put({
-    //     type: types.GET_GAMES_ERROR,
-    //     payload:
-    //       "Something went wrong. There's an issue on our end and we can't show this team schedule. Please try again later",
-    //   });
-    // } else {
-    //   yield put({ type: types.GET_CURRENT_GAME, payload: gameIndex });
-    // }
   } catch (error) {
     yield put({ type: types.GET_GAMES_ERROR, payload: error });
     if (error?.response?.status === 401) return;

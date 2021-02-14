@@ -4,13 +4,13 @@ export const routes = {
   root: {
     path: "/",
     component: React.lazy(() =>
-      import("../Components/Dashboard" /* webpackChunkName: "Home" */)
+      import("../components/Dashboard" /* webpackChunkName: "Home" */)
     ),
   },
   teams: {
-    path: `/:team/games/:id`,
+    path: `/:league/:team/games/:id`,
     component: React.lazy(() =>
-      import("../Components/MainSlider" /*webpackChunkName: "Teams"*/)
+      import("../components/MainSlider" /*webpackChunkName: "Teams"*/)
     ),
   },
 };

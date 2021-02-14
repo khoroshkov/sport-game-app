@@ -1,5 +1,23 @@
 import axios from "axios";
 
+axios.defaults.baseURL = "https://beta.districtapps.com/";
+
+const api = {
+  leagues: {
+    getLeagues: () => axios.get("get_leagues.php"),
+  },
+  teams: {
+    getTeams: () => axios.get("get_teams.php"),
+  },
+  games: {
+    getSchedule: (id) => axios.get(`get_schedule.php?team_id=${id}`),
+  },
+};
+
+export default api;
+
+/** API calls when url parsing after sharing */
+
 export async function getTeamsShedule(id) {
   try {
     const response = await axios.get(
@@ -25,26 +43,10 @@ export async function getTeamsList() {
 export async function getLeaguesList() {
   try {
     const response = await axios.get(
-      "http://beta.districtapps.com/get_leagues.php"
+      "https://beta.districtapps.com/get_leagues.php"
     );
     return response.data.leagues;
   } catch (error) {
     console.log(error);
   }
 }
-
-axios.defaults.baseURL = "https://beta.districtapps.com/";
-
-const api = {
-  leagues: {
-    getLeagues: () => axios.get("get_leagues.php"),
-  },
-  teams: {
-    getTeams: () => axios.get("get_teams.php"),
-  },
-  games: {
-    getSchedule: (id) => axios.get(`get_schedule.php?team_id=${id}`),
-  },
-};
-
-export default api;

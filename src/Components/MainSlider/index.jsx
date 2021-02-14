@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useHistory } from "react-router-dom";
-// import { useSelector } from "react-redux";
-// import useSessionStorage from "../../hooks/useSessionStorage";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Navigation, Scrollbar } from "swiper";
 import Loader from "react-loader-spinner";
@@ -9,41 +8,34 @@ import { createFileName, useScreenshot } from "use-react-screenshot";
 import Moment from "react-moment";
 import "moment-timezone";
 import dateFormat from "../../helpers/dateFormat";
+
+import GameResult from "./GameResult";
+import Modal from "../ModalWindow";
+// import FBshare from "../Buttons/FBShare";
+// import TwitterShare from "../Buttons/TWShare";
+// import ScreenshotButton from "../Buttons/ScreenshotButton";
+import TvChannel from "./TvChannel";
+import Location from "./Location";
+
 import "swiper/swiper-bundle.css";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-import GameResult from "../GameResult";
-import Modal from "../Modal";
-import FBshare from "../FBshare";
-// import HelmetMetaData from "../HelmetMetaData";
-import TwitterShare from "../TwitterShare";
-import ScreenshotIcon from "../../img/icons/screenshot-icon.svg";
-import ScreenshotButton from "../SreenshotButton";
-import TvChannel from "../TvChannel";
-import Location from "../Location";
+import styles from "./MainSlider.module.css";
 
 SwiperCore.use([Navigation, Scrollbar]);
 
 export default function MainSlider({
+  league,
   team,
+  teamNickname,
   slides,
   isLoading,
   currentGameIndex,
 }) {
   const history = useHistory();
-
-  /** Save all games and current game id to Session storage **/
-  // const [savedCurrentGameId, setSavedCurrentGameId] = useSessionStorage(
-  //   "current-game-id",
-  //   currentGameIndex
-  // );
-  // const [savedAllGames, setSavedAllGames] = useSessionStorage(
-  //   "all-games",
-  //   slides
-  // );
+  // const currentURL = useLocation();
 
   const [allGames, setAllGames] = useState(slides);
   const [currGame, setCurrGame] = useState(currentGameIndex);
-  // setSavedCurrentGameId(currentGameIndex);
 
   useEffect(() => {
     setAllGames(slides);
@@ -53,11 +45,7 @@ export default function MainSlider({
   console.log("allGames", allGames);
   console.log("currGame", currGame);
 
-  //number of all slides
-  const allSlides = allGames?.length;
-
   const [progress, setProgress] = useState(currentGameIndex);
-  const currentURL = useLocation();
 
   const [currentTeam, setCurrentTeam] = useState("");
   const [opponent, setOpponent] = useState("");
@@ -66,34 +54,49 @@ export default function MainSlider({
   const [image, takeScreenShot] = useScreenshot();
   const [isShowModal, setIsShowModal] = useState(false);
 
-  // create refs array of all games slides - need for screenshot
+  //** number of all games in array */
+  const allSlides = allGames?.length;
+
+  //** CREATE REFs ARRAY OF ALL GAMES - NEED FOR SCREENSHOT FUNCTION  */
   const refsArr = [...new Array(allSlides?.length)]?.map((_, index) => index);
   const screenshotRef = useRef(refsArr);
   const saveRefs = (index) => (element) => {
     screenshotRef.current[index] = element;
   };
 
-  useEffect(() => {
-    history.replace(`/${team}/games/${progress}`);
-  }, [progress, history, team]);
+  //** URL CHANGE */
 
+  useEffect(() => {
+    history.replace(
+      `/${league.toLowerCase()}/${team
+        .toLowerCase()
+        .replace(" ", "")}${teamNickname.toLowerCase()}/games/${progress}`
+    );
+  }, [progress, history, team, league, teamNickname]);
+
+  //** DOWNLOAD SCREENSHOT IMAGE */
   useEffect(() => {
     if (image) {
       download(image, { name: "sample-image", extension: "png" });
     }
   }, [image]);
 
+  //** FIND event_id FUNCTION */
   function slideChanged(index) {
-    setProgress(index);
+    if (!allGames) return;
+    const oneGame = allGames[index]?.event_id;
+    if (oneGame) {
+      setProgress(oneGame);
+    }
   }
 
-  //screnshot function
+  //** SCREENSHOT FUNCTION */
   const getScreenshot = () => {
     if (screenshotRef.current[progress])
       takeScreenShot(screenshotRef.current[progress]);
   };
 
-  // download sreenshot function
+  //** DOWNLOAD SCREENSHOT FUNCTION */
   function download(image, { name = "img", extension = "png" } = {}) {
     const a = document.createElement("a");
     a.href = image;
@@ -101,7 +104,7 @@ export default function MainSlider({
     a.click();
   }
 
-  // modal functions show - hide
+  //** SHOW/HIDE MODAL INFO WINDOW FUNCTIONS */
   const handleShow = (id, team, team2) => {
     setGameIndex(id);
     setCurrentTeam(team);
@@ -115,7 +118,6 @@ export default function MainSlider({
 
   return (
     <>
-      {/* <HelmetMetaData></HelmetMetaData> */}
       <Modal
         show={isShowModal}
         handleClose={handleClose}
@@ -133,16 +135,12 @@ export default function MainSlider({
           className="main-page-loader-cont"
         />
       ) : (
-        <div className="slider-container">
-          <div className="social-btn-wraper">
-            <ScreenshotButton
-              getScreenshot={getScreenshot}
-              ScreenshotIcon={ScreenshotIcon}
-            />
+        <div className={styles.sliderContainer}>
+          <div className={styles.socialBtnWraper}>
+            {/* <ScreenshotButton getScreenshot={getScreenshot} />
             <FBshare url={currentURL.pathname} image={image} />
-            <TwitterShare url={currentURL.pathname} />
+            <TwitterShare url={currentURL.pathname} /> */}
           </div>
-
           <Swiper
             id="main-slider"
             tag="section"
@@ -154,22 +152,35 @@ export default function MainSlider({
             onSlideChange={(swiper) => {
               slideChanged(swiper.activeIndex);
             }}
-            initialSlide={currGame}
+            initialSlide={currGame || 1}
           >
             {allGames?.map((slide, index) => (
               <SwiperSlide key={slide.event_id} tag="li">
                 <div className="screenshot-container" ref={saveRefs(index)}>
-                  <div className="team-wraper">
-                    <span className="teams-main-title">{team}</span>
-                    <span className="versus">
+                  <div className={styles.teamWraper}>
+                    <div>
+                      <span
+                        className={`${styles.teamsMainTitle} ${styles.cityName}`}
+                      >
+                        {team}
+                      </span>{" "}
+                      {league === "NBA" && (
+                        <span className={styles.teamsMainTitle}>
+                          {teamNickname}
+                        </span>
+                      )}
+                    </div>
+                    <span className={styles.versus}>
                       {slide.event_location === "0" ||
                       slide.event_location === "2"
                         ? "VS"
                         : "AT"}
                     </span>
-                    <span className="teams-main-title">{slide.event_text}</span>
+                    <span className={styles.teamsMainTitle}>
+                      {slide.event_text}
+                    </span>
                   </div>
-                  <div className="date-container">
+                  <div className={styles.dateContainer}>
                     <Moment element="span" format="dddd, MMMM D,  YYYY">
                       {dateFormat(slide.event_start)}
                     </Moment>{" "}
@@ -177,7 +188,6 @@ export default function MainSlider({
                     <Moment element="span" format="hh:mm A z">
                       {dateFormat(slide.event_start)}
                     </Moment>
-                    {/* <p>{slide.is_current_event ? "current game" : ""}</p> */}
                   </div>
                   <TvChannel channel={slide.event_tv_channel} />
                   <GameResult
@@ -194,7 +204,7 @@ export default function MainSlider({
                   onClick={() =>
                     handleShow(slide.event_id, team, slide.event_text)
                   }
-                  className="info-btn"
+                  className={styles.infoBtn}
                 >
                   <svg
                     id="Capa_1"
