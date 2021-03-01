@@ -8,7 +8,11 @@ function* getTeams() {
     if (status < 200 || status >= 300) throw new Error("Something went wrong");
     yield put({ type: types.GET_TEAMS_SUCCESS, payload: data });
   } catch (error) {
-    yield put({ type: types.GET_TEAMS_ERROR });
+    yield put({
+      type: types.GET_TEAMS_ERROR,
+      payload:
+        "Something went wrong. There's an issue on our end and we can't show teams list. Please try again later",
+    });
     if (error?.response?.status === 401) return;
     console.log("error", "Something went wrong");
   }

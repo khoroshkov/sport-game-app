@@ -62,6 +62,9 @@ li {
   background-repeat: no-repeat;
   background-size: 100% auto;
   background-position: center;
+
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.4s ease-in-out;
 }
 
 .swiper-button-prev {
@@ -77,6 +80,11 @@ li {
 .swiper-button-next:after,
 .swiper-button-prev:after {
   display: none;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  transform: scale(1.1);
 }
 
 .swiper-scrollbar {
@@ -97,4 +105,26 @@ li {
   transform: scale(1);
   opacity: 1;
   transition: all 0.5s ease-in-out;
+}
+
+.swiper-slide,
+.swiper-button-prev,
+.swiper-button-next {
+  min-height: 290px;
+  animation: appearence 1.5s ease-in;
+}
+
+@keyframes appearence {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .swiper-slide {
+    min-height: 500px;
+  }
 }

@@ -27,10 +27,10 @@
   object-fit: contain;
 }
 
-.rotate {
+/* .rotate {
   animation: rotating 5s linear infinite;
   animation-delay: 2s;
-}
+} */
 
 @keyframes rotating {
   0% {
@@ -48,11 +48,11 @@
   }
 
   .logoContainer span {
-    font-size: 2rem;
+    font-size: 1.2rem;
   }
 
-  .logoImgCont {
+  /* .logoImgCont {
     width: 2.6rem;
     height: 2.6rem;
-  }
+  } */
 }

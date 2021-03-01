@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import useSessionStorage from "../../hooks/useSessionStorage";
+import useLocalStaroge from "../../hooks/useLocalStorage";
 
 import Loader from "react-loader-spinner";
 import ReactNotification from "react-notifications-component";
@@ -24,6 +25,7 @@ import errorHandler from "../../helpers/errorHandler";
 
 import "react-notifications-component/dist/theme.css";
 import styles from "./Dasboard.module.css";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 export default function Dashboard({ match, location }) {
   const dispatch = useDispatch();
@@ -33,40 +35,77 @@ export default function Dashboard({ match, location }) {
   const games = useSelector((state) => state?.games?.data?.game_alert);
   const loading = useSelector((state) => state?.games?.loading);
   const errorMessages = useSelector((state) => state?.games?.error);
+  const errorTeamsMessages = useSelector((state) => state?.teams?.error);
+
+  // console.log("CURRENT_GAME", currentGame);
 
   // const history = useHistory();
   const teamRef = useRef();
 
-  const [allGames, setAllGames] = useState(games);
-  const [teamsList, setTeamsList] = useState(teams);
-  const [currentGameIndex, setCurrentGameIndex] = useState(currentGame);
-  const [team, setTeam] = useState("");
-  const [teamNickname, setTeamNickname] = useState("");
-  const [league, setLeague] = useState("");
-
-  //** CUSTOM HOOK FOR SAVING TEAM's and LEAGUE's NAMES and IDs TO SESSION STORAGE *//
-  const [savedTeamId, setSavedTeamId] = useSessionStorage("teams-id", "");
-  const [savedLeagueId, setSavedLeagueId] = useSessionStorage("leagues-id", "");
-  const [savedTeamName, setSavedTeamName] = useSessionStorage("team-name", "");
-  const [savedLeagueName, setSavedLeagueName] = useSessionStorage(
-    "league-name",
-    ""
-  );
-  const [savedTeamList, setSavedTeamList] = useSessionStorage(
-    "teams-list",
-    teams || []
-  );
   const [savedCurrentGameId, setSavedCurrentGameId] = useSessionStorage(
     "current-game-id",
     ""
   );
+
+  const [allGames, setAllGames] = useState(games);
+  const [teamsList, setTeamsList] = useState(teams);
+  const [currentGameIndex, setCurrentGameIndex] = useState(
+    currentGame || savedCurrentGameId
+  );
+  const [team, setTeam] = useState("");
+  const [teamNickname, setTeamNickname] = useState("");
+  //** temp hardcoded 28 - NBA league  */
+  // const [league, setLeague] = useState("");
+  const [league, setLeague] = useState("28");
+
+  //** CUSTOM HOOK FOR SAVING TEAM's and LEAGUE's NAMES and IDs TO SESSION STORAGE *//
+  const [savedTeamId, setSavedTeamId] = useSessionStorage("teams-id", "");
+  //**temp hardcoded 28 - NBA league */
+  // const [savedLeagueId, setSavedLeagueId] = useSessionStorage("leagues-id", "");
+  const [savedLeagueId, setSavedLeagueId] = useSessionStorage(
+    "leagues-id",
+    "28"
+  );
+
+  const [savedTeamName, setSavedTeamName] = useSessionStorage("team-name", "");
+  const [savedChosenTeamId, setSavedChosenTeamId] = useLocalStaroge(
+    "chosen-team-id",
+    ""
+  );
+  const [savedChosenTeamName, setSavedChosenTeamName] = useLocalStaroge(
+    "chosen-team-name",
+    ""
+  );
+  const [savedChosenTeamNickname, setSavedChosenTeamNickName] = useLocalStorage(
+    "chosen-team-nickname",
+    ""
+  );
+
+  //** temp hardcoded NBA league name */
+  // const [savedLeagueName, setSavedLeagueName] = useSessionStorage(
+  //   "league-name",
+  //   ""
+  // );
+  const [savedLeagueName, setSavedLeagueName] = useSessionStorage(
+    "league-name",
+    "NBA"
+  );
+
+  const [savedTeamList, setSavedTeamList] = useSessionStorage(
+    "teams-list",
+    teams || []
+  );
+  // const [savedCurrentGameId, setSavedCurrentGameId] = useSessionStorage(
+  //   "current-game-id",
+  //   ""
+  // );
   const [savedAllGames, setSavedAllGames] = useSessionStorage("all-games", []);
 
   const [defaultTeamValue, setDefaultTeamValue] = useState(
     savedTeamId ? savedTeamId : "select"
   );
   const [defaultLeagueValue, setDefaultLeagueValue] = useState(
-    savedLeagueId ? savedLeagueId : "select"
+    savedLeagueId ? savedLeagueId : "28"
   );
 
   const defaultBackground = league ? league : "basic";
@@ -77,6 +116,29 @@ export default function Dashboard({ match, location }) {
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadedCompleted, setLoadedCompleted] = useState(false);
+
+  //** FUNCTION TO OPEN LAST VISITTED TEAM | fires at page refresh also */
+
+  useEffect(() => {
+    if (savedChosenTeamId && savedChosenTeamName) {
+      setIsLoaded(true);
+      dispatch({
+        type: types.GET_GAMES_START,
+        payload: +savedChosenTeamId,
+      });
+
+      setDefaultTeamValue(savedChosenTeamId);
+      setTeam(savedChosenTeamName);
+      setTeamNickname(savedChosenTeamNickname);
+    }
+    const timer = setTimeout(() => {
+      setIsLoaded(false);
+    }, 2000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
 
   /** UPDATE ALL GAMES, TEAMS and CURRENT GAME ID in SESSION STORAGE AFTER API COMPLETED */
 
@@ -91,8 +153,9 @@ export default function Dashboard({ match, location }) {
   }, [league, currentGame, games, teams, currentGame]);
 
   //** PARSE URL PARAMS and API FUNCTION AFTRE LINK SHARED */
+
   useEffect(() => {
-    if (match.params.id && !savedTeamId && !savedLeagueId) {
+    if (match.params.id && !savedChosenTeamId && !savedChosenTeamName) {
       setIsLoaded(true);
       getLeaguesList().then((res) => {
         const leagueId = getLeagueId(res, match.params.league);
@@ -146,30 +209,6 @@ export default function Dashboard({ match, location }) {
           });
         }
       });
-    } else {
-      // console.log("link NOT SHARED");
-    }
-  }, []);
-
-  //** refresh page function and get info from sessionStorage *//-- NOT WORKING FOR NOW!!!!
-  useEffect(() => {
-    if (
-      savedTeamId &&
-      savedLeagueId &&
-      savedTeamName &&
-      savedLeagueName &&
-      savedCurrentGameId &&
-      savedAllGames
-    ) {
-      console.log("full url");
-      setAllGames(savedAllGames);
-      setDefaultTeamValue(savedTeamId);
-      setDefaultLeagueValue(savedLeagueId);
-      setTeamsList(savedTeamList);
-      setCurrentGameIndex(savedCurrentGameId);
-    } else {
-      // console.log("NOT full url");
-      // history.push("/");
     }
   }, []);
 
@@ -192,40 +231,51 @@ export default function Dashboard({ match, location }) {
     }
   }, [league]);
 
-  //** LEAGUE SELECTION FUNCTION */
+  //** LEAGUE SELECTION FUNCTION  - fully working function | currently no need in league selection */
+
+  //** temp function  */
   function handleLeagueChange(e) {
-    const selectedLeagueName = leagues?.find(
-      (league) => league.league_id === e.target.value
-    );
-    //** temporary hardcoded value for NBA league available */
-    if (e.target.value === "28") {
-      dispatch({
-        type: types.GET_TEAMS_START,
-      });
-    } else {
-      errorHandler(
-        "Ooops....",
-        "This league is currently unavailable but we're working hard. Please try again later",
-        "info"
-      );
-
-      setDefaultTeamValue("select");
-    }
-
-    setLeague(e.target.value);
-    setSavedLeagueId(e.target.value);
-    setSavedLeagueName(selectedLeagueName.league_name);
-    setTeamsList(teams);
-    setSavedTeamList(teams);
-    setDefaultLeagueValue(e.target.value);
-    loadImage(e.target.value);
-
-    teamRef.current.value = "select";
+    console.log(e);
   }
+
+  if (errorTeamsMessages) {
+    errorHandler("Server Error", errorMessages, "danger");
+  }
+
+  // function handleLeagueChange(e) {
+  //   const selectedLeagueName = leagues?.find(
+  //     (league) => league.league_id === e.target.value
+  //   );
+  //   //** temporary hardcoded value for NBA league available */
+  //   if (e.target.value === "28") {
+  //     dispatch({
+  //       type: types.GET_TEAMS_START,
+  //     });
+  //   } else {
+  //     errorHandler(
+  //       "Ooops....",
+  //       "This league is currently unavailable but we're working hard. Please try again later",
+  //       "info"
+  //     );
+
+  //     setDefaultTeamValue("select");
+  //   }
+
+  //   setLeague(e.target.value);
+  //   setSavedLeagueId(e.target.value);
+  //   setSavedLeagueName(selectedLeagueName.league_name);
+  //   setTeamsList(teams);
+  //   setSavedTeamList(teams);
+  //   setDefaultLeagueValue(e.target.value);
+  //   loadImage(e.target.value);
+
+  //   teamRef.current.value = "select";
+  // }
 
   //** TEAM SELECTION FUNCTION */
 
   function handleTeamsChange(e) {
+    setIsLoaded(true);
     const selectedTeam = (teams || savedTeamList)?.find(
       (team) => team.team_id === e.target.value
     );
@@ -241,6 +291,12 @@ export default function Dashboard({ match, location }) {
     setSavedTeamName(selectedTeam.team_name);
     setDefaultTeamValue(selectedTeam.team_id);
 
+    setSavedChosenTeamId(selectedTeam.team_id);
+    setSavedChosenTeamName(selectedTeam.team_name);
+    setSavedChosenTeamNickName(selectedTeam.team_nickname);
+
+    setIsLoaded(false);
+
     if (errorMessages) {
       errorHandler("Server Error", errorMessages, "danger");
     }
@@ -248,6 +304,10 @@ export default function Dashboard({ match, location }) {
 
   //** RENDER SLIDER IF TEAMS and GAMES INFO COMPLETED */
   let isChoiceMade = !!currentGame || loadedCompleted;
+
+  // console.log("loadedCompleted", loadedCompleted);
+  // console.log("currentGame", currentGame);
+  // console.log("isChoiceMade", isChoiceMade);
 
   return (
     <>
@@ -269,7 +329,7 @@ export default function Dashboard({ match, location }) {
               color="#ff3366"
               height={200}
               width={200}
-              timeout={3000}
+              timeout={500}
               className={styles.loader}
             />
           )}

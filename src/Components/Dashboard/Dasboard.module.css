@@ -7,7 +7,7 @@
   padding-top: 1rem;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 2rem;
+  /* margin-bottom: 2rem; */
 }
 
 .mainBgImg img {
@@ -86,6 +86,7 @@ select {
   font-size: inherit;
   cursor: inherit;
   line-height: inherit;
+  -webkit-appearance: none;
 }
 
 select::-ms-expand {
@@ -109,6 +110,7 @@ select {
   background-color: transparent;
   background-image: linear-gradient(to top, transparent, transparent 33%);
   text-align: center;
+  border-radius: 0;
 }
 
 .leagueSelect,
@@ -171,7 +173,7 @@ select {
   }
 
   .homeContainer {
-    padding-top: 2rem;
+    padding-top: 0.5rem;
   }
 
   .selectContainer {
@@ -186,9 +188,9 @@ select {
 }
 
 @media only screen and (min-width: 1024px) {
-  .container {
+  /* .container {
     margin-bottom: 10rem;
-  }
+  } */
 
   .homeContainer {
     width: 860px;

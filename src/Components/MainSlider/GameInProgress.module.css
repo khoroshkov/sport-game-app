@@ -1,0 +1,31 @@
+.progressText {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.1rem;
+  color: #bdbdbd;
+  letter-spacing: 0.1rem;
+}
+
+.progressText:after {
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: bottom;
+  animation: ellipsis steps(4, end) 900ms infinite;
+  content: "\2026";
+  width: 0px;
+  position: absolute;
+}
+
+@keyframes ellipsis {
+  to {
+    width: 1.5rem;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .progressText {
+    font-size: 1.8rem;
+    line-height: 2.4rem;
+    letter-spacing: 0.2rem;
+  }
+}

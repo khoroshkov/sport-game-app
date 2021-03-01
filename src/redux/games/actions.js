@@ -19,7 +19,11 @@ function* getSchedule({ payload }) {
       yield put({ type: types.GET_CURRENT_GAME, payload: gameIndex });
     }
   } catch (error) {
-    yield put({ type: types.GET_GAMES_ERROR, payload: error });
+    yield put({
+      type: types.GET_GAMES_ERROR,
+      payload:
+        "Something went wrong. There's an issue on our end and we can't show this team schedule. Please try again later",
+    });
     if (error?.response?.status === 401) return;
     console.log("error", "Something went wrong");
   }

@@ -3,6 +3,7 @@ import moment from "moment-timezone";
 
 import dateFormat from "../../helpers/dateFormat";
 
+import GameInProgress from "./GameInProgress";
 import EndedGames from "./EndedGames";
 import CountDownTimer from "./CountDownTimer";
 
@@ -10,20 +11,27 @@ import styles from "./GameResult.module.css";
 
 export default function GameResult({ date, result }) {
   const gameDate = moment(dateFormat(date)).tz("America/New_York");
-  const todayDate = new Date();
-  // const todayDate = moment.tz(new Date(), "America/New_York");
-  // console.log("todayDate", todayDate);
+  const todayDate = moment(new Date()).tz("America/New_York");
+
+  // END GAME TIME = EVENT_START + 4 hours
+  const gameEndTime = moment(dateFormat(date))
+    .tz("America/New_York")
+    .add(4, "h");
 
   const timeFormat = "M/DD/YYYY, hh:mm:ss a";
+  const isGameInProgress = todayDate > gameDate && todayDate < gameEndTime;
 
-  const isGameEnded = todayDate > gameDate;
+  const isGameEnded = todayDate > gameEndTime;
 
   return (
     <div className={styles.resultContainer}>
+      {isGameInProgress && <GameInProgress />}
       {isGameEnded ? (
         <EndedGames result={result} />
       ) : (
-        <CountDownTimer timeTillDate={gameDate} timeFormat={timeFormat} />
+        !isGameInProgress && (
+          <CountDownTimer timeTillDate={gameDate} timeFormat={timeFormat} />
+        )
       )}
     </div>
   );

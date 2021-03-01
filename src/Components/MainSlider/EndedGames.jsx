@@ -7,7 +7,7 @@ export default function EndedGames({ result }) {
   }
   return (
     <div className="ended-games-cont">
-      {!gameResult.length && <span>TBD</span>}
+      {!gameResult.length && <span>Event Concluded</span>}
       {gameResult && gameResult?.map((res) => <p key={res}>{res}</p>)}
     </div>
   );
